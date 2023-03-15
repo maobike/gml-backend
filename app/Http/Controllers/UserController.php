@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Events\UserRegistered;
 use App\Models\User;
 use Carbon\Carbon;
 
@@ -38,6 +39,9 @@ class UserController extends Controller
         $user->category_id = $request->category_id;
 
         $user->save();
+
+        // Emitir el evento UserRegistered
+        event(new UserRegistered($user, env('ADMIN_EMAIL')));
 
         return response()->json([
             'message' => 'User create successfully.',
